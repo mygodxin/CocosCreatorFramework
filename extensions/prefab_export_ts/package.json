@@ -13,5 +13,45 @@
     "scripts": {
         "build": "tsc -b",
         "watch": "tsc -w"
+    },
+    "contributions": {
+        "assets": {
+            "menu": {
+                "methods": "./dist/assets-menu.js",
+                "createMenu": "onCreateMenu",
+                "assetMenu": "onAssetMenu",
+                "dbMenu": "onDBMenu",
+                "panelMenu": "onPanelMenu"
+            }
+        },
+        "menu": [
+            {
+                "path": "Develop",
+                "label": "test",
+                "message": "log"
+            },
+            {
+                "path": "i18n:menu.panel",
+                "label": "test",
+                "message": "log"
+            },
+            {
+                "path": "i18n:menu.node",
+                "label": "test",
+                "message": "log"
+            },
+            {
+                "path": "i18n:menu.assets",
+                "label": "test",
+                "message": "log"
+            }
+        ],
+        "messages": {
+            "log": {
+                "methods": [
+                    "log"
+                ]
+            }
+        }
     }
 }

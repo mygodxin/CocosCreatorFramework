@@ -4,15 +4,13 @@ import BaseComp from "./BaseComp";
 
 /** 弹窗基类 */
 export default class BaseWindow extends BaseComp {
-    static get pack(): string { return; }
-    static get url(): string { return; }
+    get pack(): string { return; }
+    get url(): string { return; }
 
     /** 打开动画 */
     showAnimation: string = '';
     /** 关闭动画 */
     hideAnimation: string = '';
-    /** 是否在加载 */
-    private _loading: boolean;
     /** 当前场景是否唯一 */
     isOnly: boolean = false;
     /** 是否显示modal */
@@ -22,6 +20,7 @@ export default class BaseWindow extends BaseComp {
     isClickModalHide: boolean;
     /** 是否点击穿透 */
     isClickThrough: boolean = false;
+
     /** 初始化 */
     protected onInit(): void {
 
@@ -39,8 +38,6 @@ export default class BaseWindow extends BaseComp {
 
     protected onEnable(): void {
         this.registerEvents();
-
-        super.onEnable();
 
         if (this.isModal) {
             // if (!this.modal) {
@@ -63,8 +60,6 @@ export default class BaseWindow extends BaseComp {
     protected onDisable(): void {
         this.removeEvents();
 
-        super.onDisable();
-
         if (this.modal && this.modal.parent) {
             this.modal.removeFromParent();
         }
@@ -77,7 +72,6 @@ export default class BaseWindow extends BaseComp {
             let node = new Node('block_input_events');
             this._blocker = node.addComponent(BlockInputEvents);
             this.modal.addChild(this._blocker.node);
-            // this.modal.width = 1
         }
         this._blocker.node.active = block;
     }

@@ -1,27 +1,71 @@
-import { Component } from "cc";
+import { Asset, instantiate, Node, Prefab } from "cc";
+import { loader } from "../../support/res/Loader";
 
-/** 组件基类(警告：使用ccc生命周期函数onLoad onEnable onDisable请调用super) */
-export default abstract class BaseComp extends Component {
+/** 组件基类 */
+export default abstract class BaseComp extends Node {
     /** 包名 */
-    protected static get pack(): string { return ''; }
+    abstract get pack(): string;
     /** url */
-    protected static get url(): string { return ''; }
+    abstract get url(): string;
 
-    /** 是否展示模态框 */
-    protected isModal: boolean = false;
+    /** node组件 */
+    private viewComponent: Node;
 
     /** 打开面板传输的数据 */
     openData: any;
 
-    /** 关闭 */
-    hide(): void {
-        this.node.destroy();
+    private _loading: boolean;
+    private _inited: boolean = false;
+
+    init(): void {
+        if (this._inited) {
+            this.doShowAnimation();
+        } else {
+            if (this._loading) return;
+
+            this._loading = true;
+            if (this.pack != '')
+                loader.load(this.pack, this.url, this.loadComplete.bind(this));
+            else
+                loader.load(this.url, this.loadComplete.bind(this));
+        }
     }
 
+    private loadComplete(res: Asset): void {
+        this._loading = false;
+
+        const node: Node = instantiate(res as Prefab);
+        this.addChild(node);
+
+        this._inited = true;
+        this.onInit();
+
+        if (this.isShowing)
+            this.doShowAnimation();
+    }
+
+    protected doShowAnimation(): void {
+        this.onShow();
+    }
+
+    /** 关闭 */
+    hide(): void {
+        if (this.isShowing)
+            this.doHideAnimation();
+    }
+
+    protected doHideAnimation(): void {
+        this.hideImmediately();
+    }
+
+    private hideImmediately(): void {
+        this.onHide();
+        this.removeFromParent();
+    }
 
     /** 是否显示 */
     get isShowing(): boolean {
-        return this.node.parent != null;
+        return this.viewComponent.parent != null;
     }
 
     /** 初始化 */
@@ -37,16 +81,5 @@ export default abstract class BaseComp extends Component {
     /** 关闭 */
     protected onHide(): void {
 
-    }
-
-    //适配
-    protected onLoad(): void {
-        this.onInit();
-    }
-    protected onEnable(): void {
-        this.onShow();
-    }
-    protected onDisable(): void {
-        this.onHide();
     }
 }

@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, AudioSource, game, assetManager, resources, instantiate, director, Prefab } from 'cc';
 import { gameApp } from './core/GameApp';
 import { audioMgr } from './manager/AudioManager';
-import { loader } from './support/res/Loader';
 import { timer } from './support/util/Timer';
 const { ccclass, property } = _decorator;
 

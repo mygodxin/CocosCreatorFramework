@@ -1,10 +1,13 @@
-import { Asset, assetManager, BaseNode, instantiate, js, Node, Prefab, UITransform, warn } from "cc";
+import { Asset, assetManager, BaseNode, instantiate, js, Node, Prefab, resources, UIOpacity, UITransform, warn } from "cc";
 import { loader } from "../../support/res/Loader";
 
 /** 组件基类 */
 export default abstract class BaseComp extends Node {
     private pack: string;
     private url: string;
+
+    private trans: UITransform;
+
     constructor(url: string, pack: string) {
         super();
         this.name = js.getClassName(this);
@@ -29,8 +32,25 @@ export default abstract class BaseComp extends Node {
         } else {
             if (this._loading) return;
 
-            // if()
-            
+            //已加载则直接获取缓存创建
+            let asset: Asset;
+            if (this.pack) {
+                const bundle = assetManager.getBundle(this.pack);
+                if (bundle) {
+                    asset = bundle.get(this.url) as Prefab;
+                    if (asset) {
+                        this.createNode(asset);
+                        return;
+                    }
+                }
+            } else {
+                asset = resources.get(this.url);
+                if (asset) {
+                    this.createNode(asset);
+                    return;
+                }
+            }
+            //未加载则执行加载
             this._loading = true;
             if (this.pack != '')
                 loader.load(this.pack, this.url, this.loadComplete.bind(this));
@@ -42,10 +62,16 @@ export default abstract class BaseComp extends Node {
     private loadComplete(res: Asset): void {
         this._loading = false;
 
+        this.createNode(res);
+    }
+
+    protected createNode(res: Asset): void {
         const node: Node = instantiate(res as Prefab);
 
         const size = node.getComponent(UITransform).contentSize;
-        this.addComponent(UITransform).setContentSize(size);
+        this.trans = this.addComponent(UITransform);
+        this.trans.setContentSize(size);
+
         this.addChild(node);
         this.viewComponent = node;
 
@@ -57,9 +83,14 @@ export default abstract class BaseComp extends Node {
     }
 
     protected doShowAnimation(): void {
+        this.onEnable();
         this.onShow();
     }
+    protected onEnable(): void {
+    }
 
+    protected onDisable(): void {
+    }
     /** 关闭 */
     hide(): void {
         if (this.isShowing)
@@ -67,10 +98,11 @@ export default abstract class BaseComp extends Node {
     }
 
     protected doHideAnimation(): void {
+        this.onEnable();
         this.hideImmediately();
     }
 
-    private hideImmediately(): void {
+    protected hideImmediately(): void {
         this.onHide();
         this.removeFromParent();
     }

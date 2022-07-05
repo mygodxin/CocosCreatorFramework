@@ -1,4 +1,4 @@
-import { BlockInputEvents, Node } from "cc";
+import { BlockInputEvents, color, Graphics, Node, UIOpacity, UITransform, view } from "cc";
 import { event } from "../../support/event/Event";
 import BaseComp from "./BaseComp";
 
@@ -17,6 +17,8 @@ export default class BaseWindow extends BaseComp {
     isClickModalHide: boolean;
     /** 是否点击穿透 */
     isClickThrough: boolean = false;
+    /** modal透明度 */
+    modalOpacity: number = 127;
 
     /** 初始化 */
     protected onInit(): void {
@@ -37,20 +39,19 @@ export default class BaseWindow extends BaseComp {
         this.registerEvents();
 
         if (this.isModal) {
-            // if (!this.modal) {
-            //     this.modal = new Node;
-            //     const graphics = this.modal.addComponent(Graphics);
-            //     graphics.fillColor = cc.color(0, 0, 0, 127);
-            //     graphics.fillRect(-GRoot.inst.width / 2, -GRoot.inst.height / 2, GRoot.inst.width, GRoot.inst.height)
-            //     // graphics.rect(0, 0, cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
-            //     this.modal.opacity = 127;
-            //     this.modal.width = GRoot.inst.width//cc.view.getVisibleSize().width;
-            //     this.modal.height = GRoot.inst.height//cc.view.getVisibleSize().height;
-            //     this.modal.x = this.modal.width / 2;
-            //     this.modal.y = -this.modal.height / 2;
-            //     this.setBlockInput(true);
-            // }
-            // this.node.parent.addChild(this.modal);
+            if (!this.modal) {
+                const viewWidth = view.getVisibleSize().width;
+                const viewHeight = view.getVisibleSize().height;
+                this.modal = new Node;
+                this.modal.addComponent(UITransform).setContentSize(view.getVisibleSize());
+                const graphics = this.modal.addComponent(Graphics);
+                graphics.fillColor = color(0, 0, 0, 127);
+                graphics.fillRect(0, 0, viewWidth, viewHeight);
+                // graphics.rect(0, 0, cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
+                this.modal.addComponent(UIOpacity).opacity = 127;
+                this.setBlockInput(true);
+            }
+            this.addChild(this.modal);
         }
     }
 

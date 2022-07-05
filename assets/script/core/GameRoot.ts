@@ -1,6 +1,8 @@
 import BaseWindow from "./base/BaseWindow";
 import { Asset, director, instantiate, Node, Prefab, Scene } from "cc";
+import { BaseScene } from "./base/BaseScene";
 
+/** UI层级 */
 export enum UILayer {
     scene,
     window,
@@ -8,16 +10,48 @@ export enum UILayer {
 }
 
 class GameRoot {
+    private curScene: BaseScene;
+    init(root): void {
+
+    }
     /**
      * 显示面板
-     * @param view prefab上绑定的脚本类
-     * @param param Object可通过this.openData获取,Function则完成后调用
+     * @param view
+     * @param param
      */
-    showWindow(view: BaseWindow, param?: any, layer = UILayer.window): void {
+    showWindow(view: { new(): BaseWindow }, param?: any, layer = UILayer.window): void {
         if (!view) return;
 
-        this.root.addChild(view);
-        view.openData = param;
+        const _view = new (view as any)() as BaseWindow;
+        this.root.addChild(_view);
+        _view.openData = param;
+        _view.show();
+    }
+
+    /**
+     * 显示场景
+     * @param scene 
+     * @param param 
+     * @param layer 
+     */
+    showScene(scene: { new(): BaseScene }, param?: any, layer = UILayer.scene): void {
+        if (!scene) return;
+
+        const _scene = new (scene as any)() as BaseScene;
+        if (this.curScene === _scene) {
+            _scene.openData = param;
+            _scene.show();
+        } else if (this.curScene === null) {
+            this.root.addChild(_scene);
+            _scene.openData = param;
+            _scene.show();
+        } else {
+            this.curScene.hide();
+            this.curScene = _scene;
+            this.root.addChild(_scene);
+            _scene.openData = param;
+            _scene.show();
+        }
     }
 
     private get root(): Scene {

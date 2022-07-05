@@ -1,8 +1,20 @@
-import { timer } from "../support/util/Timer";
+import { sys } from "cc";
+import { gameRoot } from "./GameRoot";
 
 class GameApp {
-    constructor() {
-        timer.init();
+    
+    /** 启动 */
+    launch(): void {
+        this.enterLoading();
+    }
+
+    /** 进入Loading */
+    private enterLoading(): void {
+        gameRoot.showWindow
+    }
+
+    get platform() {
+        return sys.platform
     }
 }
 

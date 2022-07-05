@@ -1,23 +1,29 @@
-import { Asset, instantiate, Node, Prefab } from "cc";
+import { Asset, BaseNode, instantiate, js, Node, Prefab, warn } from "cc";
 import { loader } from "../../support/res/Loader";
 
 /** 组件基类 */
 export default abstract class BaseComp extends Node {
-    /** 包名 */
-    abstract get pack(): string;
-    /** url */
-    abstract get url(): string;
+    private pack: string;
+    private url: string;
+    constructor(url: string, pack: string) {
+        super();
+        this.name = js.getClassName(this);
+        this.url = url;
+        this.pack = pack;
+    }
 
     /** node组件 */
-    private viewComponent: Node;
+    viewComponent: Node;
 
     /** 打开面板传输的数据 */
     openData: any;
 
     private _loading: boolean;
     private _inited: boolean = false;
+    /** 是否自动解析UI */
+    protected isAutoParse: boolean = true;
 
-    init(): void {
+    show(): void {
         if (this._inited) {
             this.doShowAnimation();
         } else {
@@ -36,6 +42,7 @@ export default abstract class BaseComp extends Node {
 
         const node: Node = instantiate(res as Prefab);
         this.addChild(node);
+        this.viewComponent = node;
 
         this._inited = true;
         this.onInit();
@@ -65,7 +72,7 @@ export default abstract class BaseComp extends Node {
 
     /** 是否显示 */
     get isShowing(): boolean {
-        return this.viewComponent.parent != null;
+        return this.parent != null;
     }
 
     /** 初始化 */

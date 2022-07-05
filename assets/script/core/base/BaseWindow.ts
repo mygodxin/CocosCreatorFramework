@@ -4,9 +4,6 @@ import BaseComp from "./BaseComp";
 
 /** 弹窗基类 */
 export default class BaseWindow extends BaseComp {
-    get pack(): string { return; }
-    get url(): string { return; }
-
     /** 打开动画 */
     showAnimation: string = '';
     /** 关闭动画 */

@@ -1,4 +1,4 @@
-import { Asset, BaseNode, instantiate, js, Node, Prefab, warn } from "cc";
+import { Asset, assetManager, BaseNode, instantiate, js, Node, Prefab, UITransform, warn } from "cc";
 import { loader } from "../../support/res/Loader";
 
 /** 组件基类 */
@@ -23,12 +23,14 @@ export default abstract class BaseComp extends Node {
     /** 是否自动解析UI */
     protected isAutoParse: boolean = true;
 
-    show(): void {
+    init(): void {
         if (this._inited) {
             this.doShowAnimation();
         } else {
             if (this._loading) return;
 
+            // if()
+            
             this._loading = true;
             if (this.pack != '')
                 loader.load(this.pack, this.url, this.loadComplete.bind(this));
@@ -41,6 +43,9 @@ export default abstract class BaseComp extends Node {
         this._loading = false;
 
         const node: Node = instantiate(res as Prefab);
+
+        const size = node.getComponent(UITransform).contentSize;
+        this.addComponent(UITransform).setContentSize(size);
         this.addChild(node);
         this.viewComponent = node;
 

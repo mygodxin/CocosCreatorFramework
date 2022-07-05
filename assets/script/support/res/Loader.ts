@@ -1,6 +1,6 @@
 import { Asset, assetManager, AssetManager } from "cc";
 
-class Loader extends AssetManager {
+class Loader {
     /** 异步加载 */
     load(pack: string, url: string, callback?: (res: Asset) => void): void;
     load(url: string, callback?: (res: Asset) => void): void;

@@ -11,16 +11,17 @@ export class GameScene extends BaseScene {
     private btnClose: Button;
 
     protected onInit(): void {
+        console.log('game场景onInit');
         this.btnClose = this.viewComponent.getChildByName('btnClose').getComponent(Button);
         this.btnClose.node.on(NodeEventType.TOUCH_END, this.onClickClose, this);
     }
 
     protected onShow(): void {
-
+        console.log('game场景onShow');
     }
 
     protected onHide(): void {
-
+        console.log('game场景onHide');
     }
 
     private onClickClose(): void {

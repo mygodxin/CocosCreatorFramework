@@ -1,8 +1,9 @@
 import { sys } from "cc";
+import { LoadScene } from "../ui/scene/LoadScene";
 import { gameRoot } from "./GameRoot";
 
 class GameApp {
-    
+
     /** 启动 */
     launch(): void {
         this.enterLoading();
@@ -10,7 +11,7 @@ class GameApp {
 
     /** 进入Loading */
     private enterLoading(): void {
-        gameRoot.showWindow
+        gameRoot.showScene(LoadScene);
     }
 
     get platform() {

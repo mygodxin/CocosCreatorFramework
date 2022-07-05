@@ -1,4 +1,4 @@
-import { BlockInputEvents, Graphics, macro, Node } from "cc";
+import { BlockInputEvents, Node } from "cc";
 import { event } from "../../support/event/Event";
 import BaseComp from "./BaseComp";
 

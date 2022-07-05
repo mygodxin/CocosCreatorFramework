@@ -10,9 +10,20 @@ export enum UILayer {
 }
 
 class GameRoot {
+    private layerList: Node[];
     private curScene: BaseScene;
     init(root): void {
-
+        this.layerList = [];
+        for (let key in UILayer) {
+            const index = parseInt(key);
+            if (!isNaN(index)) {
+                const layer = new Node;
+                // layer.setSize(this._root.width, this._root.height);
+                // layer.addRelation(this._root, fgui.RelationType.Size);
+                this.root.addChild(layer);
+                this.layerList.push(layer);
+            }
+        }
     }
     /**
      * 显示面板
@@ -25,7 +36,7 @@ class GameRoot {
         const _view = new (view as any)() as BaseWindow;
         this.root.addChild(_view);
         _view.openData = param;
-        _view.show();
+        _view.init();
     }
 
     /**
@@ -39,23 +50,24 @@ class GameRoot {
 
         const _scene = new (scene as any)() as BaseScene;
         if (this.curScene === _scene) {
+            _scene.init();
             _scene.openData = param;
-            _scene.show();
-        } else if (this.curScene === null) {
+        } else if (this.curScene == null) {
+            this.curScene = _scene;
             this.root.addChild(_scene);
+            _scene.init();
             _scene.openData = param;
-            _scene.show();
         } else {
             this.curScene.hide();
             this.curScene = _scene;
             this.root.addChild(_scene);
+            _scene.init();
             _scene.openData = param;
-            _scene.show();
         }
     }
 
     private get root(): Scene {
-        return director.getScene();
+        return director.getScene().getChildByName('Canvas');
     }
 }
 

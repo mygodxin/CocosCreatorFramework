@@ -1,4 +1,4 @@
-import { BlockInputEvents, color, Graphics, Node, UIOpacity, UITransform, view } from "cc";
+import { BlockInputEvents, Color, color, Graphics, Node, UIOpacity, UITransform, view } from "cc";
 import { event } from "../../support/event/Event";
 import BaseComp from "./BaseComp";
 
@@ -12,7 +12,7 @@ export default class BaseWindow extends BaseComp {
     isOnly: boolean = false;
     /** 是否显示modal */
     isModal: boolean = true;
-    private modal: Node;
+    private modalLayer: Node;
     /** 是否点击modal关闭 */
     isClickModalHide: boolean;
     /** 是否点击穿透 */
@@ -39,27 +39,29 @@ export default class BaseWindow extends BaseComp {
         this.registerEvents();
 
         if (this.isModal) {
-            if (!this.modal) {
+            if (!this.modalLayer) {
                 const viewWidth = view.getVisibleSize().width;
                 const viewHeight = view.getVisibleSize().height;
-                this.modal = new Node;
-                this.modal.addComponent(UITransform).setContentSize(view.getVisibleSize());
-                const graphics = this.modal.addComponent(Graphics);
-                graphics.fillColor = color(0, 0, 0, 127);
-                graphics.fillRect(0, 0, viewWidth, viewHeight);
+                this.modalLayer = new Node('ModalLayer');
+                this.modalLayer.addComponent(UITransform).setContentSize(view.getVisibleSize());
+                const graphics = this.modalLayer.addComponent(Graphics);
+                graphics.fillColor = Color.BLACK;
+                graphics.fillRect(-viewWidth, -viewHeight, viewWidth, viewHeight);
                 // graphics.rect(0, 0, cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
-                this.modal.addComponent(UIOpacity).opacity = 127;
+                // this.modal.addComponent(UIOpacity).opacity = 127;
                 this.setBlockInput(true);
+
             }
-            this.addChild(this.modal);
+            this.viewComponent.addChild(this.modalLayer);
+            // this.modalLayer.setSiblingIndex(0);
         }
     }
 
     protected onDisable(): void {
         this.removeEvents();
 
-        if (this.modal && this.modal.parent) {
-            this.modal.removeFromParent();
+        if (this.modalLayer && this.modalLayer.parent) {
+            this.modalLayer.removeFromParent();
         }
     }
 
@@ -67,9 +69,7 @@ export default class BaseWindow extends BaseComp {
     private _blocker: BlockInputEvents = null;
     public setBlockInput(block: boolean) {
         if (!this._blocker) {
-            let node = new Node('block_input_events');
-            this._blocker = node.addComponent(BlockInputEvents);
-            this.modal.addChild(this._blocker.node);
+            this._blocker = this.modalLayer.addComponent(BlockInputEvents);
         }
         this._blocker.node.active = block;
     }

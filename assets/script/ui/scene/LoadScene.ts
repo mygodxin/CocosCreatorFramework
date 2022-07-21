@@ -1,6 +1,6 @@
-import { Button, Label, NodeEventType, Sprite } from "cc";
+import { Button, NodeEventType } from "cc";
 import { BaseScene } from "../../core/base/BaseScene";
-import { gameRoot } from "../../core/GameRoot";
+import { GRoot } from "../../core/GRoot";
 import { GameScene } from "./GameScene";
 
 /** 加载场景 */
@@ -25,6 +25,6 @@ export class LoadScene extends BaseScene {
     }
 
     private onClickClose(): void {
-        gameRoot.showScene(GameScene);
+        GRoot.showScene(GameScene);
     }
 }

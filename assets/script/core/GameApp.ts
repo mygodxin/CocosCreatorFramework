@@ -1,6 +1,6 @@
 import { sys } from "cc";
 import { LoadScene } from "../ui/scene/LoadScene";
-import { gameRoot } from "./GameRoot";
+import { GRoot } from "./GRoot";
 
 class GameApp {
 
@@ -11,7 +11,7 @@ class GameApp {
 
     /** 进入Loading */
     private enterLoading(): void {
-        gameRoot.showScene(LoadScene);
+        GRoot.showScene(LoadScene);
     }
 
     get platform() {

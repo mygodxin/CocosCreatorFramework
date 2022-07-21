@@ -1,6 +1,6 @@
-import BaseWindow from "./base/BaseWindow";
-import { Asset, director, instantiate, Node, Prefab, Scene } from "cc";
+import { director, Node, Scene } from "cc";
 import { BaseScene } from "./base/BaseScene";
+import BaseWindow from "./base/BaseWindow";
 
 /** UI层级 */
 export enum UILayer {
@@ -9,7 +9,7 @@ export enum UILayer {
     alert
 }
 
-class GameRoot {
+class Root {
     private layerList: Node[];
     private curScene: BaseScene;
     init(root): void {
@@ -72,4 +72,4 @@ class GameRoot {
 }
 
 /** 游戏主容器 */
-export const gameRoot = new GameRoot();
+export const GRoot = new Root();

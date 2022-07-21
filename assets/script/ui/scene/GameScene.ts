@@ -1,6 +1,6 @@
-import { Button, Label, NodeEventType, Sprite } from "cc";
+import { Button, NodeEventType } from "cc";
 import { BaseScene } from "../../core/base/BaseScene";
-import { gameRoot } from "../../core/GameRoot";
+import { GRoot } from "../../core/GRoot";
 import { BagWin } from "../window/BagWin";
 import { UserWin } from "../window/UserWin";
 import { LoadScene } from "./LoadScene";
@@ -35,14 +35,14 @@ export class GameScene extends BaseScene {
     }
 
     private onClickClose(): void {
-        gameRoot.showScene(LoadScene);
+        GRoot.showScene(LoadScene);
     }
 
     private onClickBag(): void {
-        gameRoot.showWindow(BagWin);
+        GRoot.showWindow(BagWin);
     }
 
     private onClickUser(): void {
-        gameRoot.showWindow(UserWin);
+        GRoot.showWindow(UserWin);
     }
 }

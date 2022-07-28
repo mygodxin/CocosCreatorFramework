@@ -45,12 +45,11 @@ export default class BaseWindow extends BaseComp {
                 this.modalLayer = new Node('ModalLayer');
                 this.modalLayer.addComponent(UITransform).setContentSize(view.getVisibleSize());
                 const graphics = this.modalLayer.addComponent(Graphics);
-                graphics.fillColor = Color.BLACK;
+                graphics.fillColor = Color.RED;
                 graphics.fillRect(-viewWidth, -viewHeight, viewWidth, viewHeight);
                 // graphics.rect(0, 0, cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
                 // this.modal.addComponent(UIOpacity).opacity = 127;
                 this.setBlockInput(true);
-
             }
             this.viewComponent.addChild(this.modalLayer);
             // this.modalLayer.setSiblingIndex(0);

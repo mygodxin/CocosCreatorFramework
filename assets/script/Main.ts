@@ -1,12 +1,16 @@
-import { _decorator, Component, Node, AudioSource, game, assetManager, resources, instantiate, director, Prefab } from 'cc';
+import { _decorator, Component, Node, AudioSource, game, assetManager, resources, instantiate, director, Prefab, ScrollView, Label } from 'cc';
+import { GList } from './core/comp/GList';
 import { gameApp } from './core/GameApp';
 import { audioMgr } from './manager/AudioManager';
 import { timer } from './support/util/Timer';
 const { ccclass, property } = _decorator;
 
 /** 游戏主入口 */
-@ccclass('Main')
+@ccclass
 export class Main extends Component {
+    private list: GList;
+    @property(ScrollView)
+    private scrollView: ScrollView;
     onLoad(): void {
         //初始化音频管理器
         const audioSource = this.node.getComponent(AudioSource);
@@ -15,6 +19,9 @@ export class Main extends Component {
         audioMgr.init(audioSource);
         //初始化计时器
         timer.init();
+
+
+        this.list = this.scrollView.getComponent(GList);
 
         // loader.load('resources/bg.png',(res)=>{
         //     console.log('cha')
@@ -30,7 +37,15 @@ export class Main extends Component {
 
     start(): void {
         //游戏启动
-        gameApp.launch();
+        // gameApp.launch();
+        this.list.itemRenderer = this.onItemRenderer.bind(this);
+        this.list.setVirtual();
+        this.list.numItems = 5;
+    }
+
+    private onItemRenderer(index: number, obj: Node) {
+        console.log('查看', index, obj)
+        obj.getChildByName('txtIndex').getComponent(Label).string = index + '';
     }
 }
 

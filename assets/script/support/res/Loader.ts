@@ -25,14 +25,14 @@ class Loader {
     async loadSync(): Promise<Asset> {
         const len = arguments.length;
         switch (len) {
-            case 2:
+            case 1:
                 return new Promise<Asset>((resolve, reject) => {
                     assetManager.loadAny(arguments[0], (err, res) => {
                         if (err) reject(err);
                         resolve(res);
                     });
                 })
-            case 3:
+            case 2:
                 const pack = arguments[0];
                 const url = arguments[1];
                 return new Promise<Asset>(async (resolve, reject) => {

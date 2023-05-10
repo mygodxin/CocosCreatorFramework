@@ -1,8 +1,9 @@
 import { _decorator, Component, Node, AudioSource, game, assetManager, resources, instantiate, director, Prefab, ScrollView, Label } from 'cc';
 import { GList } from './core/comp/GList';
-import { gameApp } from './core/GameApp';
 import { audioMgr } from './manager/AudioManager';
 import { timer } from './core/util/Timer';
+import { UIRoot } from './core/ui/UIRoot';
+import { LoadScene } from './ui/scene/LoadScene';
 const { ccclass, property } = _decorator;
 
 /** 游戏主入口 */
@@ -35,12 +36,14 @@ export class Main extends Component {
         // })
     }
 
-    start(): void {
+    start(): void
+    {
+        UIRoot.inst.showScene(LoadScene);
         //游戏启动
         // gameApp.launch();
-        this.list.itemRenderer = this.onItemRenderer.bind(this);
-        this.list.setVirtual();
-        this.list.numItems = 5;
+        // this.list.itemRenderer = this.onItemRenderer.bind(this);
+        // this.list.setVirtual();
+        // this.list.numItems = 5;
     }
 
     private onItemRenderer(index: number, obj: Node) {

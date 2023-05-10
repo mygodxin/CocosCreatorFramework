@@ -1,10 +1,10 @@
-import { BlockInputEvents, Button, Color, director, Event, Graphics, instantiate, Node, NodeEventType, Prefab, Scene, UITransform } from "cc";
+import { BlockInputEvents, Button, Color, director, Graphics, instantiate, Node, NodeEventType, Prefab, UITransform } from "cc";
 import { loader } from "../../support/res/Loader";
 import UIComp from "./UIComp";
 import { UIScene } from "./UIScene";
 import UIView from "./UIView";
 
-/** UI层级 */
+/** UI层级(预留，端游的概念，手游的弹窗背景通常都有黑色遮罩，阻挡事件，所以很少会出现专门设置层级的情况) */
 export enum UILayer
 {
     scene,
@@ -16,10 +16,10 @@ export class UIRoot
 {
     public readonly designWidth: number = 1280;
     public readonly designHeight: number = 720;
-    public cacheList: Map<string, UIView>;
+    public cacheList: Map<string, UIView> = new Map<string, UIView>();
 
     /** 已打开节点列表 */
-    public openList: UIView[];
+    public openList: UIView[] = [];
     /** modal层 */
     private _modalLayer: Node;
 
@@ -31,6 +31,7 @@ export class UIRoot
         return this._inst;
     }
 
+
     private get root()
     {
         return director.getScene().getChildByName('Canvas');
@@ -38,10 +39,10 @@ export class UIRoot
 
     public async showScene(scene: { new(): UIScene }, data: any = null)
     {
-
+        this.showWindow(scene);
     }
 
-    public async showWindow<T extends UIView>(win: { new(): UIComp }, data: any = null)
+    public async showWindow(win: { new(): UIComp }, data: any = null)
     {
         const pack = win['pack'];
         const url = win['url'];
@@ -53,8 +54,8 @@ export class UIRoot
             var uiComp = node.getComponent(win);
             if (!uiComp)
                 node.addComponent(win);
-            this.cacheList[key] = node;
-
+            this.cacheList[key] = uiComp;
+            view = uiComp as UIView;
             view.data = data;
 
         }

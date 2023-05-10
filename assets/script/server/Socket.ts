@@ -5,9 +5,9 @@
  * @Last Modified time: 2022-07-04 13:49:51
  */
 import { error, warn } from "cc";
-import { ISocket } from "../support/network/ISocket";
-import { WebSock } from "../support/network/WebSock";
-import { timer } from "../support/util/Timer";
+import { ISocket } from "../core/network/ISocket";
+import { WebSock } from "../core/network/WebSock";
+import { timer } from "../core/util/Timer";
 import { RequestCode, ReturnCode } from "./define/EnumDefine";
 import { BufferReader, BufferWriter, Dictionary, EncryptHelper, IProtocolSerializable } from "./define/ProtocolCommon";
 import ConstString from "../define/ConstString";

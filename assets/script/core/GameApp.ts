@@ -1,6 +1,6 @@
 import { sys } from "cc";
 import { LoadScene } from "../ui/scene/LoadScene";
-import { GRoot } from "./GRoot";
+import { GRoot } from "./ui/UIRoot";
 
 class GameApp {
 

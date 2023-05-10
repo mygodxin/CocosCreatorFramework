@@ -1,6 +1,6 @@
 import { Asset, AudioClip, AudioSource } from "cc";
 import { loader } from "../support/res/Loader";
-import { storage } from "../support/storage/Storage";
+import { storage } from "../core/storage/Storage";
 
 /** 音频类型 */
 export enum AudioType {

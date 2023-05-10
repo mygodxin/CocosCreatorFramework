@@ -2,7 +2,7 @@ import { _decorator, Component, Node, AudioSource, game, assetManager, resources
 import { GList } from './core/comp/GList';
 import { gameApp } from './core/GameApp';
 import { audioMgr } from './manager/AudioManager';
-import { timer } from './support/util/Timer';
+import { timer } from './core/util/Timer';
 const { ccclass, property } = _decorator;
 
 /** 游戏主入口 */

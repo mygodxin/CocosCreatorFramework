@@ -1,30 +1,40 @@
 import { Button, NodeEventType } from "cc";
-import { BaseScene } from "../../core/base/BaseScene";
-import { GRoot } from "../../core/GRoot";
+import { UIRoot } from "../../core/ui/UIRoot";
+import { UIScene } from "../../core/ui/UIScene";
 import { GameScene } from "./GameScene";
 
 /** 加载场景 */
-export class LoadScene extends BaseScene {
-    constructor() {
-        super(`ui/scene/LoadScene`, 'resources');
+export class LoadScene extends UIScene
+{
+    public static get pack(): string
+    {
+        return `resources`;
+    }
+    public static get url(): string
+    {
+        return `ui/scene/LoadScene`;
     }
     private btnClose: Button;
 
-    protected onInit(): void {
+    protected onInit(): void
+    {
         console.log('load场景onInit');
-        this.btnClose = this.viewComponent.getChildByName('btnClose').getComponent(Button);
+        this.btnClose = this.node.getChildByName('btnClose').getComponent(Button);
         this.btnClose.node.on(NodeEventType.TOUCH_END, this.onClickClose, this);
     }
 
-    protected onShow(): void {
+    protected onShow(): void
+    {
         console.log('load场景onShow');
     }
 
-    protected onHide(): void {
+    protected onHide(): void
+    {
         console.log('load场景onHide');
     }
 
-    private onClickClose(): void {
-        GRoot.showScene(GameScene);
+    private onClickClose(): void
+    {
+        UIRoot.inst.showScene(GameScene);
     }
 }

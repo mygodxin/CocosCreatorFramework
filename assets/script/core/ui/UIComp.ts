@@ -1,6 +1,8 @@
-import { Component } from "cc";
+import { CCClass, Component, _decorator } from "cc";
+const { ccclass, property } = _decorator;
 
 /** 组件基类 */
+@ccclass
 export default class UIComp extends Component {
     public static path(): string {
         return '';

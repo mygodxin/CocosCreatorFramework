@@ -1,7 +1,9 @@
-import { Button, NodeEventType } from "cc";
+import { Button, NodeEventType, _decorator } from "cc";
 import UIView from "../../core/ui/UIView";
+const { ccclass, property } = _decorator;
 
 /** 用户界面 */
+@ccclass
 export class UserWin extends UIView
 {
     public static get pack(): string

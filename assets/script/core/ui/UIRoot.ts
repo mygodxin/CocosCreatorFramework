@@ -1,4 +1,4 @@
-import { BlockInputEvents, Button, Color, director, Graphics, instantiate, Node, NodeEventType, Prefab, UITransform } from "cc";
+import { BlockInputEvents, Button, Color, director, Graphics, instantiate, Layers, Node, NodeEventType, Prefab, Sprite, UIOpacity, UITransform } from "cc";
 import { loader } from "../../support/res/Loader";
 import UIComp from "./UIComp";
 import { UIScene } from "./UIScene";
@@ -58,7 +58,7 @@ export class UIRoot {
         view.node.parent = this.root;
 
         //新开启面板放最上面
-        view.node.setSiblingIndex(0)
+        view.node.setSiblingIndex(this.root.children.length - 1)
 
         this.openList.push(view);
 
@@ -91,11 +91,12 @@ export class UIRoot {
         this._modalLayer = new Node('ModalLayer');
         this._modalLayer.addComponent(UITransform).setContentSize(rootTran.contentSize);
         const graphics = this.modalLayer.addComponent(Graphics);
-        graphics.fillColor = Color.RED;
-        graphics.fillRect(-viewWidth, -viewHeight, viewWidth, viewHeight);
-        // graphics.rect(0, 0, cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
-        // this.modal.addComponent(UIOpacity).opacity = 127;
+        graphics.fillColor = Color.BLACK;
+        graphics.fillRect(-viewWidth / 2, -viewHeight / 2, viewWidth, viewHeight);
+        this._modalLayer.layer = Layers.Enum.UI_2D;
+        this._modalLayer.addComponent(UIOpacity).opacity = 127;
         this.setBlockInput(true);
+        this._modalLayer.parent = this.root;
         this._modalLayer.addComponent(Button);
     }
     /** 设置是否挡住触摸事件 */
@@ -119,8 +120,11 @@ export class UIRoot {
         for (let i: number = cnt - 1; i >= 0; i--) {
             var go = canvas.children[i];
             var name = go.name.replace("(Clone)", "");
-            var win = this.cacheList.get(name);
+            var win = go.getComponent(name) as UIView;
             if (win != null && win.isModal && go.activeInHierarchy) {
+                var block = win.getComponent(BlockInputEvents);
+                if(!block)
+                    win.addComponent(BlockInputEvents);
                 if (win.isClickVoidClose) {
                     btn.node.on(NodeEventType.TOUCH_END, () => {
                         win.hide();

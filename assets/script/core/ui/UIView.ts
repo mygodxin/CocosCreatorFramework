@@ -1,8 +1,11 @@
 import { Node } from "cc";
 import UIComp from "./UIComp";
 import { UIRoot } from "./UIRoot";
+import { CCClass, Component, _decorator } from "cc";
+const { ccclass, property } = _decorator;
 
 /** 面板基类 */
+@ccclass
 export default class UIView extends UIComp {
     public static get pack(): string { return };
     public static get url(): string { return };
@@ -11,6 +14,9 @@ export default class UIView extends UIComp {
     /** 是否点击空白处关闭 */
     public isClickVoidClose: boolean = true;
     private _clickCloseLayer: Node;
+    onLoad(): void {
+        this.onInit();
+    }
 
     onEnable(): void {
         this.DoShowAnimation();

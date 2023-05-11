@@ -1,9 +1,11 @@
-import { Button, NodeEventType } from "cc";
+import { Button, NodeEventType, _decorator } from "cc";
 import { UIRoot } from "../../core/ui/UIRoot";
 import { UIScene } from "../../core/ui/UIScene";
 import { GameScene } from "./GameScene";
+const { ccclass, property } = _decorator;
 
 /** 加载场景 */
+@ccclass
 export class LoadScene extends UIScene
 {
     public static get pack(): string

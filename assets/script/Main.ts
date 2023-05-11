@@ -38,12 +38,12 @@ export class Main extends Component {
 
     start(): void
     {
-        UIRoot.inst.showScene(LoadScene);
+        // UIRoot.inst.showScene(LoadScene);
         //游戏启动
         // gameApp.launch();
-        // this.list.itemRenderer = this.onItemRenderer.bind(this);
-        // this.list.setVirtual();
-        // this.list.numItems = 5;
+        this.list.itemRenderer = this.onItemRenderer.bind(this);
+        this.list.setVirtual();
+        this.list.numItems = 50;
     }
 
     private onItemRenderer(index: number, obj: Node) {

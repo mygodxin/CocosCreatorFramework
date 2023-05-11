@@ -5,18 +5,17 @@ import { UIScene } from "./UIScene";
 import UIView from "./UIView";
 
 /** UI层级(预留，端游的概念，手游的弹窗背景通常都有黑色遮罩，阻挡事件，所以很少会出现专门设置层级的情况) */
-export enum UILayer
-{
+export enum UILayer {
     scene,
     window,
     alert
 }
 
-export class UIRoot
-{
+export class UIRoot {
     public readonly designWidth: number = 1280;
     public readonly designHeight: number = 720;
     public cacheList: Map<string, UIView> = new Map<string, UIView>();
+    public _curScene: UIScene;
 
     /** 已打开节点列表 */
     public openList: UIView[] = [];
@@ -24,36 +23,33 @@ export class UIRoot
     private _modalLayer: Node;
 
     private static _inst: UIRoot = null;
-    public static get inst(): UIRoot
-    {
+    public static get inst(): UIRoot {
         if (this._inst == null)
             this._inst = new UIRoot();
         return this._inst;
     }
 
-
-    private get root()
-    {
+    private get root() {
         return director.getScene().getChildByName('Canvas');
     }
 
-    public async showScene(scene: { new(): UIScene }, data: any = null)
-    {
-        this.showWindow(scene);
+    public async showScene(scene: { new(): UIScene }, data: any = null) {
+        if (this._curScene != null) {
+            this._curScene.hide();
+        }
+        this._curScene = await this.showWindow(scene, data) as UIScene;
     }
 
-    public async showWindow(win: { new(): UIComp }, data: any = null)
-    {
+    public async showWindow(win: { new(): UIComp }, data: any = null) {
         const pack = win['pack'];
         const url = win['url'];
         const key = pack + url;
         var view = this.cacheList.get(key);
-        if (view == null)
-        {
+        if (view == null) {
             var node = instantiate(await loader.loadSync(pack, url) as Prefab);
             var uiComp = node.getComponent(win);
             if (!uiComp)
-                node.addComponent(win);
+                uiComp = node.addComponent(win);
             this.cacheList[key] = uiComp;
             view = uiComp as UIView;
             view.data = data;
@@ -67,30 +63,28 @@ export class UIRoot
         this.openList.push(view);
 
         this.adjustModalLayer();
+
+        return view;
     }
 
-    public hideWindow(view: UIView): void
-    {
+    public hideWindow(view: UIView): void {
         view.hide();
     }
-    public hideWindowImmediately(view: UIView, dispose: boolean = false): void
-    {
+    public hideWindowImmediately(view: UIView, dispose: boolean = false): void {
         var index = this.openList.indexOf(view);
         if (index >= 0)
             this.openList.splice(index, 1);
         this.adjustModalLayer();
     }
 
-    public get modalLayer(): Node
-    {
+    public get modalLayer(): Node {
         if (this._modalLayer == null)
             this.createModalLayer();
 
         return this._modalLayer;
     }
 
-    private createModalLayer(): void
-    {
+    private createModalLayer(): void {
         var rootTran = this.root.getComponent(UITransform);
         const viewWidth = rootTran.width;
         const viewHeight = rootTran.height;
@@ -106,17 +100,14 @@ export class UIRoot
     }
     /** 设置是否挡住触摸事件 */
     private _blocker: BlockInputEvents = null;
-    public setBlockInput(block: boolean)
-    {
-        if (!this._blocker)
-        {
+    public setBlockInput(block: boolean) {
+        if (!this._blocker) {
             this._blocker = this.modalLayer.addComponent(BlockInputEvents);
         }
         this._blocker.node.active = block;
     }
 
-    private adjustModalLayer(): void
-    {
+    private adjustModalLayer(): void {
         if (this._modalLayer == null)
             this.createModalLayer();
         var canvas = this.root;
@@ -125,17 +116,13 @@ export class UIRoot
         var btn = this._modalLayer.getComponent(Button);
         btn.node.targetOff(btn);
 
-        for (let i: number = cnt - 1; i >= 0; i--)
-        {
+        for (let i: number = cnt - 1; i >= 0; i--) {
             var go = canvas.children[i];
             var name = go.name.replace("(Clone)", "");
             var win = this.cacheList.get(name);
-            if (win != null && win.isModal && go.activeInHierarchy)
-            {
-                if (win.isClickVoidClose)
-                {
-                    btn.node.on(NodeEventType.TOUCH_END, () =>
-                    {
+            if (win != null && win.isModal && go.activeInHierarchy) {
+                if (win.isClickVoidClose) {
+                    btn.node.on(NodeEventType.TOUCH_END, () => {
                         win.hide();
                     });
                 }

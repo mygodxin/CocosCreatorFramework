@@ -3,8 +3,7 @@ import UIComp from "./UIComp";
 import { UIRoot } from "./UIRoot";
 
 /** 面板基类 */
-export default class UIView extends UIComp
-{
+export default class UIView extends UIComp {
     public static get pack(): string { return };
     public static get url(): string { return };
     /** 是否模态窗 */
@@ -13,35 +12,29 @@ export default class UIView extends UIComp
     public isClickVoidClose: boolean = true;
     private _clickCloseLayer: Node;
 
-    onEnable(): void
-    {
+    onEnable(): void {
         this.DoShowAnimation();
     }
     /** 面板打开动画 */
-    protected DoShowAnimation(): void
-    {
+    protected DoShowAnimation(): void {
         this.onShow();
     }
 
-    protected OnDisable(): void
-    {
+    protected OnDisable(): void {
         this.onHide();
     }
 
-    public hide(): void
-    {
+    public hide(): void {
         if (this._clickCloseLayer != null)
             this._clickCloseLayer.removeFromParent();
         this.DoHideAnimation();
     }
 
-    protected DoHideAnimation(): void
-    {
+    protected DoHideAnimation(): void {
         this.hideImmediately();
     }
 
-    public hideImmediately(): void
-    {
+    public hideImmediately(): void {
         this.Hide();
         UIRoot.inst.hideWindowImmediately(this);
     }
